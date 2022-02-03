@@ -13,7 +13,6 @@ on:
 
 jobs:
   update-db-cron:
-    environment: notionapi
 
     runs-on: ubuntu-latest
     
@@ -26,6 +25,9 @@ jobs:
         version: 6.0.2
     - run: pnpm i
     - run: pnpm run update:db
+      env:
+        NOTION_API_KEY: '${{secrets.NOTION_API_KEY}}'
+        NOTION_DATABASE: '${{secrets.NOTION_DATABASE}}'
     - run: git config --global user.email "cron@job.com"
     - run: git config --global user.name "cronjob"
     - run: git add src/recipes.json
