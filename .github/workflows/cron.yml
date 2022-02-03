@@ -1,0 +1,31 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+   inputs:
+        nothing:
+          description: 'Safely ignore'  
+  
+
+jobs:
+  update-db-cron:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+    - uses: pnpm/action-setup@v2.0.1
+      with:
+        version: 6.0.2
+    - run: pnpm i
+    - run: pnpm run update:db
+    - run: git add src/recipes.json
+    - run: git commit -m "[CRON] Update recipes.json"
+    - run: git push -u origin main
