@@ -9,11 +9,11 @@ on:
   workflow_dispatch:
    inputs:
         nothing:
-          description: 'Safely ignore'  
-  
+          description: 'Safely ignore'
 
 jobs:
   update-db-cron:
+    environment: notionapi
 
     runs-on: ubuntu-latest
     
@@ -26,6 +26,8 @@ jobs:
         version: 6.0.2
     - run: pnpm i
     - run: pnpm run update:db
+    - run: git config --global user.email "cron@job.com"
+    - run: git config --global user.name "cronjob"
     - run: git add src/recipes.json
     - run: git commit -m "[CRON] Update recipes.json"
     - run: git push -u origin main
