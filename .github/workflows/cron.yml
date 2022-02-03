@@ -33,4 +33,6 @@ jobs:
     - run: git config --global user.name "cronjob"
     - run: git add src/recipes.json
     - run: git commit -m "[CRON] Update recipes.json"
+      continue-on-error: true
     - run: git push -u origin main
+      continue-on-error: true
