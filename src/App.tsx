@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Router, Link } from "@reach/router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import recipesJSON from "./recipes.json";
 
@@ -15,6 +16,7 @@ type DerivedIngredients = Record<string, { name: string; count: number }>;
 function EditIngredients(props: { ingredients: DerivedIngredients }) {
   const [state, setState] = useState(props.ingredients);
   const [hasCopied, setHasCopied] = useState(false);
+  const [password, setPassword] = useState("");
 
   const ingredientList = Object.values(state)
     .filter(({ count }) => count)
@@ -23,10 +25,16 @@ function EditIngredients(props: { ingredients: DerivedIngredients }) {
     })
     .join("\n");
 
+  const ingredientsPayload = JSON.stringify(
+    Object.values(state).filter(({ count }) => count)
+  );
+
+  const entries = Object.entries(state);
+
   return (
     <div className="flex">
       <div>
-        {Object.entries(state).map(([key, value]) => {
+        {entries.map(([key, value]) => {
           const add = (n: number) => {
             setState((prevState) => {
               return {
@@ -76,24 +84,59 @@ function EditIngredients(props: { ingredients: DerivedIngredients }) {
           );
         })}
       </div>
-      <div>
-        <CopyToClipboard
-          text={ingredientList}
-          onCopy={() => {
-            setHasCopied(true);
-            setTimeout(() => {
-              setHasCopied(false);
-            }, 2000);
-          }}
-        >
-          <button>{hasCopied ? "Copied!" : "Copy List"}</button>
-        </CopyToClipboard>
-      </div>
+      {entries.length === 0 ? (
+        "No ingredients selected"
+      ) : (
+        <div>
+          <div className="mb2">
+            <CopyToClipboard
+              text={ingredientList}
+              onCopy={() => {
+                setHasCopied(true);
+                setTimeout(() => {
+                  setHasCopied(false);
+                }, 2000);
+              }}
+            >
+              <button>{hasCopied ? "Copied!" : "Copy List"}</button>
+            </CopyToClipboard>
+          </div>
+          <div>
+            <label>Password</label>
+            <br />
+            <input
+              type="text"
+              value={password}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+              }}
+            />
+            <button
+              onClick={() => {
+                fetch(
+                  "https://bfoodtrack.netlify.app/.netlify/functions/post",
+                  {
+                    method: "POST",
+                    headers: {
+                      "x-password": password,
+                      "Content-Type": "application/json",
+                    },
+                    body: ingredientsPayload,
+                  }
+                );
+              }}
+            >
+              Save ingredient list
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function App() {
+function Home(_props: { path: string }) {
   const [state, setState] = useState<RecipeTuple[]>([]);
   const [isEditMode, setEditMode] = useState(false);
   const recipes = recipesJSON as Recipes;
@@ -120,7 +163,7 @@ function App() {
   return (
     <div>
       <div className="flex">
-        <div className="w-50 pa3">
+        <div className="w-40 pr2">
           <div className="f3 h3">Recipes</div>
           {recipes.map(({ ingredients, title, url }) => {
             return (
@@ -168,7 +211,7 @@ function App() {
             );
           })}
         </div>
-        <div className="w-50 pa3">
+        <div className="w-60">
           <div className="h3">
             <button
               onClick={() => {
@@ -193,6 +236,26 @@ function App() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function Todo(_props: { path: string }) {
+  return <div>allo allo</div>;
+}
+
+function App() {
+  return (
+    <div className="mw9 center avenir">
+      <div className="mb4">
+        <nav>
+          <Link to="/">Home</Link> | <Link to="/todo">todo</Link>
+        </nav>
+      </div>
+      <Router>
+        <Home path="/" />
+        <Todo path="/todo" />
+      </Router>
     </div>
   );
 }
