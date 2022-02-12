@@ -8,6 +8,7 @@ const client = new Client({
 
 exports.handler = async (event) => {
   const xPassword = event["x-password"];
+  console.log(xPassword);
   // Only allow POST
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
