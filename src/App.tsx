@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Router, Link } from "@reach/router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import recipesJSON from "./recipes.json";
 
 type Recipes = {
@@ -136,7 +136,7 @@ function EditIngredients(props: { ingredients: DerivedIngredients }) {
   );
 }
 
-function Home(_props: { path: string }) {
+function Home() {
   const [state, setState] = useState<RecipeTuple[]>([]);
   const [isEditMode, setEditMode] = useState(false);
   const recipes = recipesJSON as Recipes;
@@ -240,23 +240,25 @@ function Home(_props: { path: string }) {
   );
 }
 
-function Todo(_props: { path: string }) {
+function Todo() {
   return <div>allo allo</div>;
 }
 
 function App() {
   return (
-    <div className="mw9 center avenir">
-      <div className="mb4">
-        <nav>
-          <Link to="/">Home</Link> | <Link to="/todo">todo</Link>
-        </nav>
+    <BrowserRouter>
+      <div className="mw9 center avenir">
+        <div className="mb4">
+          <nav>
+            <Link to="/">Home</Link> | <Link to="/todo">todo</Link>
+          </nav>
+        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/todo" element={<Todo />} />
+        </Routes>
       </div>
-      <Router>
-        <Home path="/" />
-        <Todo path="/todo" />
-      </Router>
-    </div>
+    </BrowserRouter>
   );
 }
 
