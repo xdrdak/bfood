@@ -19,7 +19,7 @@ exports.handler = async (event) => {
 
   const data = JSON.parse(event.body);
 
-  if (!data || typeof recipe !== "string") {
+  if (!data) {
     return { statusCode: 400, body: "Bad Request. Missing recipe" };
   }
 
