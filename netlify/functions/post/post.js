@@ -17,10 +17,9 @@ exports.handler = async (event) => {
     return { statusCode: 403, body: "Forbidden" };
   }
 
-  const params = new URLSearchParams(event.body);
-  const recipe = params.get("recipe");
+  const data = JSON.parse(event.body);
 
-  if (!recipe || typeof recipe !== "string") {
+  if (!data || typeof recipe !== "string") {
     return { statusCode: 400, body: "Bad Request. Missing recipe" };
   }
 
