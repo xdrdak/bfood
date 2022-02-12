@@ -1,14 +1,13 @@
 const { Client } = require("pg");
 
 const { PG_CONNECTION_STRING, X_PASSWORD } = process.env;
-
 const client = new Client({
   connectionString: PG_CONNECTION_STRING,
 });
 
 exports.handler = async (event) => {
-  const xPassword = event["x-password"];
-  console.log(xPassword);
+  const xPassword = event.headers["x-password"];
+
   // Only allow POST
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
