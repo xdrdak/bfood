@@ -25,7 +25,9 @@ exports.handler = async (event) => {
 
   try {
     await client.connect();
-    await client.query("INSERT INTO foodlist(DATA) values($1::json)", [recipe]);
+    await client.query("INSERT INTO foodlist(DATA) values($1::json)", [
+      JSON.stringify(data),
+    ]);
   } catch (e) {
     throw new Error(e);
   } finally {
