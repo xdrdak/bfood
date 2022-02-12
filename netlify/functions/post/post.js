@@ -24,9 +24,14 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: "Bad Request. Missing recipe" };
   }
 
-  await client.connect();
-  await client.query("INSERT INTO foodlist(DATA) values($1::json)", [recipe]);
-  await client.end();
+  try {
+    await client.connect();
+    await client.query("INSERT INTO foodlist(DATA) values($1::json)", [recipe]);
+  } catch (e) {
+    throw new Error(e);
+  } finally {
+    await client.end();
+  }
 
   return {
     statusCode: 200,
