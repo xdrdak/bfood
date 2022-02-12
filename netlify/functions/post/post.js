@@ -25,7 +25,7 @@ exports.handler = async (event) => {
   }
 
   await client.connect();
-  await client.query("INSERT INTO foodlist(DATA) values($1::text)", [recipe]);
+  await client.query("INSERT INTO foodlist(DATA) values($1::json)", [recipe]);
   await client.end();
 
   return {
