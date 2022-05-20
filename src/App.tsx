@@ -164,8 +164,8 @@ function Home() {
     <div>
       <div className="flex">
         <div className="w-40 pr2">
-          <div className="f3 h3">Recipes</div>
-          {recipes.map(({ ingredients, title, url }) => {
+          <div className="f3 h3">Recipes ({recipes.length})</div>
+          {recipes.map(({ ingredients, title, url }, index) => {
             return (
               <div key={url} className="mb2 ba b--black pa2">
                 <div className="mb2">
@@ -193,8 +193,11 @@ function Home() {
                         }
                       }}
                     />
-                    <span className="b">{title}</span>
+                    <span className="b">
+                      {index + 1} - {title}
+                    </span>
                   </label>
+                  &nbsp;<a href={url}>link</a>
                 </div>
                 <div className="ml4">
                   {ingredients.length ? (

@@ -15,6 +15,7 @@ async function read() {
     const recipes = [];
 
     if (response && response.results) {
+      console.log(response.results.length);
       for (const r of response.results) {
         try {
           recipes.push({
