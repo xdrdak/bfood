@@ -16,20 +16,24 @@ async function read() {
 
     if (response && response.results) {
       for (const r of response.results) {
-        recipes.push({
-          url: r.url,
-          title: r.properties.Name.title[0].plain_text,
-          ingredients: r.properties.Ingredients.multi_select.map(
-            ({ name }) => name
-          ),
-        });
+        try {
+          recipes.push({
+            url: r.url,
+            title: r.properties.Title.title[0].plain_text,
+            ingredients: r.properties.Ingredients.multi_select.map(
+              ({ name }) => name
+            ),
+          });
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
 
     fs.writeFileSync("src/recipes.json", JSON.stringify(recipes), "utf-8");
     console.log("Success! Entry added.");
   } catch (error) {
-    console.error(error.body);
+    console.error(error);
   }
 }
 
