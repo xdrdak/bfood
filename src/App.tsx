@@ -160,6 +160,14 @@ function Home() {
     }
   }
 
+  let selectedRecipes = [];
+  for (const [url] of state) {
+    const recipe = recipes.find((r) => r.url === url);
+    if (recipe) {
+      selectedRecipes.push(recipe);
+    }
+  }
+
   return (
     <div>
       <div className="flex">
@@ -227,15 +235,26 @@ function Home() {
           {isEditMode ? (
             <EditIngredients ingredients={derivedIngredients} />
           ) : (
-            <>
-              {Object.entries(derivedIngredients).map(([key, value]) => {
-                return (
-                  <div key={key}>
-                    {value.count} x {value.name}
-                  </div>
-                );
-              })}
-            </>
+            <div className="flex">
+              <div>
+                {Object.entries(derivedIngredients).map(([key, value]) => {
+                  return (
+                    <div key={key}>
+                      {value.count} x {value.name}
+                    </div>
+                  );
+                })}
+              </div>
+              <div>
+                {selectedRecipes.map((r) => {
+                  return (
+                    <div key={r.url}>
+                      {r.title} - <a href={r.url}>link</a>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
       </div>
